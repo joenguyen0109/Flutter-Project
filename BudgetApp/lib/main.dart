@@ -1,4 +1,3 @@
-import 'package:BudgetApp/service/DataQuery.dart';
 import 'package:flutter/material.dart';
 import 'Views/HomeView.dart';
 import 'Views/TrackView.dart';
@@ -17,9 +16,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: Dataquery(),
-        ),
         ChangeNotifierProvider.value(
           value: HomeViewModel(),
         ),
@@ -55,7 +51,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: _page[_selectedPage],
       floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
+          FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(

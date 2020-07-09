@@ -1,5 +1,4 @@
 import 'package:BudgetApp/ViewModels/HomeViewModel.dart';
-import 'package:BudgetApp/service/DataQuery.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +17,7 @@ class _HomeViewState extends State<HomeView> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Dataquery>(context).getData(month: 7,year: 2020).then((_) => {
+      Provider.of<HomeViewModel>(context).fetchData().then((_) => {
             setState(() {
               _isLoading = false;
             })
@@ -30,6 +29,23 @@ class _HomeViewState extends State<HomeView> {
 
   Widget dailyspeendWidget({String date, String month, int total, var list}) {
     final formatCurrency = new NumberFormat("#,##0", "en_US");
+
+    List<Widget> listTileWidget = [];
+
+    for (var item in list) {
+      listTileWidget.add(
+        ListTile(
+          title: Text(
+            item.name,
+            style: TextStyle(fontSize: 15),
+          ),
+          trailing: Text(
+            "-${formatCurrency.format(item.spend)}",
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+      );
+    }
 
     if (date == DateFormat.d().format(new DateTime.now()).toString()) {
       date = 'Today';
@@ -64,22 +80,9 @@ class _HomeViewState extends State<HomeView> {
               ),
             ],
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: list.length,
-            itemBuilder: (ctx, index) {
-              return ListTile(
-                title: Text(
-                  list[index].name,
-                  style: TextStyle(fontSize: 15),
-                ),
-                trailing: Text(
-                  "-${formatCurrency.format(total)}",
-                  style: TextStyle(fontSize: 15),
-                ),
-              );
-            },
-          )
+          Column(
+            children: listTileWidget,
+          ),
         ],
       ),
     );
@@ -88,7 +91,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     var model = Provider.of<HomeViewModel>(context);
-    var data = Provider.of<Dataquery>(context);
+    final formatCurrency = new NumberFormat("#,##0", "en_US");
     return Scaffold(
       body: SafeArea(
         bottom: true,
@@ -125,7 +128,7 @@ class _HomeViewState extends State<HomeView> {
                               ),
                             ),
                             Text(
-                              "18,000,000",
+                              "${formatCurrency.format(model.income - model.totalSpend())}",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -157,12 +160,12 @@ class _HomeViewState extends State<HomeView> {
                         margin: EdgeInsets.only(top: 10),
                         child: GestureDetector(
                           onTap: () {
-                            model.prints(context);
+                            print(model.data);
                           },
                           child: ListTile(
                             contentPadding: EdgeInsets.only(left: 10),
                             title: Text(
-                              '30,000,000',
+                              '${formatCurrency.format(model.income)}',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -208,7 +211,7 @@ class _HomeViewState extends State<HomeView> {
                       child: ListTile(
                         contentPadding: EdgeInsets.only(left: 2),
                         title: Text(
-                          '12,000,000',
+                          '${formatCurrency.format(model.totalSpend())}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -243,30 +246,29 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ]),
-              // Expanded(
-              //   child: _isLoading
-              //       ? Center(
-              //           child: CircularProgressIndicator(),
-              //         )
-              //       : Text(model.counter.toString()),
-              //   // : ListView.builder(
-              //   //     shrinkWrap: true,
-              //   //     itemCount: model.data.length,
-              //   //     itemBuilder: (ctx, index) {
-              //   //       String key = model.data.keys.elementAt(index);
-              //   //       int spend = 0;
-              //   //       for (var element in model.data[key]) {
-              //   //         spend += element.spend;
-              //   //       }
-              //   //       return dailyspeendWidget(
-              //   //         date: key,
-              //   //         month: model.month,
-              //   //         total: spend,
-              //   //         list: model.data[key],
-              //   //       );
-              //   //     },
-              //   //   ),
-              // ),
+              Expanded(
+                child: _isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: model.data.length,
+                        itemBuilder: (ctx, index) {
+                          String key = model.data.keys.elementAt(index);
+                          int spend = 0;
+                          for (var element in model.data[key]) {
+                            spend += element.spend;
+                          }
+                          return dailyspeendWidget(
+                            date: key,
+                            month: model.month,
+                            total: spend,
+                            list: model.data[key],
+                          );
+                        },
+                      ),
+              ),
             ],
           ),
         ),
