@@ -18,11 +18,13 @@ class _HomeViewState extends State<HomeView> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Dataquery>(context).getData(month: 7,year: 2020).then((_) => {
-            setState(() {
-              _isLoading = false;
-            })
-          });
+      Provider.of<Dataquery>(context)
+          .getData(month: 7, year: 2020)
+          .then((_) => {
+                setState(() {
+                  _isLoading = false;
+                })
+              });
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -156,9 +158,7 @@ class _HomeViewState extends State<HomeView> {
                       child: Container(
                         margin: EdgeInsets.only(top: 10),
                         child: GestureDetector(
-                          onTap: () {
-                            model.prints(context);
-                          },
+                          onTap: () {},
                           child: ListTile(
                             contentPadding: EdgeInsets.only(left: 10),
                             title: Text(

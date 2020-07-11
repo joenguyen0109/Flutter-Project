@@ -35,6 +35,9 @@ dependencies:
   path:
   path_provider:  
   pattern_formatter:
+  percent_indicator: ^2.1.5 
+  flutter_iconpicker: ^2.0.6
+  flutter_colorpicker: ^0.3.4
 
 dev_dependencies:
   flutter_test:

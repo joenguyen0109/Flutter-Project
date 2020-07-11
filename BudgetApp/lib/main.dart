@@ -6,6 +6,7 @@ import './service/locator.dart';
 import './Views/AddNewTransaction.dart';
 import 'package:provider/provider.dart';
 import './ViewModels/HomeViewModel.dart';
+
 void main() {
   setupLocator();
   runApp(MyApp());
@@ -54,8 +55,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _page[_selectedPage],
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(

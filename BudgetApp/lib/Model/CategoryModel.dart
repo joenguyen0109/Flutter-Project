@@ -10,5 +10,4 @@ class CategoryGetter {
     const Category('Education'),
     const Category('Others'),
   ];
-
 }
