@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import '../Model/CategoryModel.dart';
 
 class NewCategory extends StatefulWidget {
   @override
@@ -9,13 +10,16 @@ class NewCategory extends StatefulWidget {
 
 class _NewCategoryState extends State<NewCategory> {
   var _pageNum = 0;
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Color(0xff443a49);
-  _pickIcon() async {
-    IconData icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.fontAwesomeIcons);
+  Color pickerColor = Colors.blue;
+  String _errormMessage = '';
+  TextEditingController _titleController = new TextEditingController();
+  IconData _icon;
 
-    print('Picked Icon:  $icon');
+  Future<IconData> _pickIcon() async {
+    IconData icon = await FlutterIconPicker.showIconPicker(context,
+        iconPackMode: IconPack.material);
+
+    return icon;
   }
 
   void changeColor(Color color) {
@@ -23,11 +27,20 @@ class _NewCategoryState extends State<NewCategory> {
   }
 
   Widget dialogContainer(BuildContext context) {
+    print('----');
+    CategoryGetter.users.forEach((element) {
+      print(element.name);
+    });
     var page1 = Container(
       height: MediaQuery.of(context).size.height / 1.9,
       width: MediaQuery.of(context).size.height / 3,
       child: Center(
-        child: TextField(),
+        child: TextField(
+          controller: _titleController,
+          decoration: InputDecoration(
+            labelText: "Add new Category",
+          ),
+        ),
       ),
     );
     var page2 = Column(
@@ -36,7 +49,7 @@ class _NewCategoryState extends State<NewCategory> {
         Container(
           height: MediaQuery.of(context).size.height / 1.9,
           child: BlockPicker(
-            pickerColor: currentColor,
+            pickerColor: Colors.blue,
             onColorChanged: changeColor,
           ),
         ),
@@ -81,15 +94,45 @@ class _NewCategoryState extends State<NewCategory> {
                     }
                   },
                 ),
+                Text(_errormMessage),
                 FloatingActionButton(
-                  child: Icon(Icons.arrow_forward),
+                  backgroundColor: Color(0xffffeb3b),
+                  child: Icon(_icon),
                   onPressed: () async {
-                    if (_pageNum == 1) {
-                      await _pickIcon();
-                    } else {
-                      setState(() {
-                        _pageNum++;
-                      });
+                    if (_pageNum == 0) {
+                      if (_titleController.text.isEmpty) {
+                        setState(() {
+                          _errormMessage = 'Please fill in!';
+                        });
+                      } else if (CategoryGetter.alreayExist(
+                          _titleController.text)) {
+                        setState(() {
+                          _errormMessage = 'Category already exist';
+                        });
+                      } else {
+                        setState(() {
+                          _errormMessage = '';
+                          _pageNum++;
+                        });
+                      }
+                    } else if (_pageNum == 1) {
+                      var icon = await _pickIcon();
+                      if (icon != null) {
+                        setState(() {
+                          _icon = icon;
+                        });
+                        CategoryGetter.users.add(new Category(
+                            _titleController.text, Icon(_icon), pickerColor));
+                        print(_icon.codePoint);
+                        print(_icon.codePoint.toRadixString(16).toUpperCase());
+                        print(_icon.codePoint
+                            .toRadixString(16)
+                            .toUpperCase()
+                            .padLeft(5, '0'));
+                        print(_icon.toString());
+                        print(pickerColor.toString());
+                        //Navigator.of(context).pop();
+                      }
                     }
                   },
                 ),
