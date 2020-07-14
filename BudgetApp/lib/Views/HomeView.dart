@@ -1,4 +1,6 @@
+import 'package:BudgetApp/Model/CategoryModel.dart';
 import 'package:BudgetApp/ViewModels/HomeViewModel.dart';
+import 'package:BudgetApp/ViewModels/TrackTimeViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -9,32 +11,33 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  bool _isInit = true;
   bool _isLoading = false;
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<HomeViewModel>(context).fetchData().then((_) => {
-            setState(() {
-              _isLoading = false;
-            })
-          });
-    }
-    _isInit = false;
+    setState(() {
+      _isLoading = true;
+    });
+    var timemodel = Provider.of<TrackTimeViewModel>(context);
+    Provider.of<HomeViewModel>(context)
+        .fetchData(month: timemodel.time.month, year: timemodel.time.year)
+        .then((_) => {
+              setState(() {
+                _isLoading = false;
+              })
+            });
     super.didChangeDependencies();
   }
 
   Widget dailyspeendWidget({String date, String month, int total, var list}) {
     final formatCurrency = new NumberFormat("#,##0", "en_US");
-
     List<Widget> listTileWidget = [];
-
     for (var item in list) {
       listTileWidget.add(
         ListTile(
+          leading: Image(
+            image: AssetImage(CategoryGetter.getImage(item.category)),
+            height: MediaQuery.of(context).size.height / 23,
+          ),
           title: Text(
             item.name,
             style: TextStyle(fontSize: 15),
@@ -68,14 +71,20 @@ class _HomeViewState extends State<HomeView> {
               Expanded(
                 child: Text(
                   '$date',
-                  style: TextStyle(fontSize: 22),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 15),
                 child: Text(
                   '-${formatCurrency.format(total)}',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -91,22 +100,16 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     var model = Provider.of<HomeViewModel>(context);
+    var timeModel = Provider.of<TrackTimeViewModel>(context);
     final formatCurrency = new NumberFormat("#,##0", "en_US");
     return Scaffold(
       body: SafeArea(
         bottom: true,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                model.month,
-                style: TextStyle(
-                  fontFamily: 'Sriracha',
-                  fontSize: 20,
-                ),
-              ),
               Container(
                 height: (MediaQuery.of(context).size.height - 40) / 6,
                 width: double.infinity,
@@ -159,9 +162,7 @@ class _HomeViewState extends State<HomeView> {
                       child: Container(
                         margin: EdgeInsets.only(top: 10),
                         child: GestureDetector(
-                          onTap: () {
-                            print(model.data);
-                          },
+                          onTap: () {},
                           child: ListTile(
                             contentPadding: EdgeInsets.only(left: 10),
                             title: Text(
@@ -262,7 +263,7 @@ class _HomeViewState extends State<HomeView> {
                           }
                           return dailyspeendWidget(
                             date: key,
-                            month: model.month,
+                            month: timeModel.month,
                             total: spend,
                             list: model.data[key],
                           );

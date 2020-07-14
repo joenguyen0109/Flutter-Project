@@ -1,12 +1,9 @@
 import 'package:BudgetApp/service/DataQuery.dart';
 import 'package:BudgetApp/service/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import '../Model/TranscationModel.dart';
 
-class HomeViewModel extends ChangeNotifier {
-  String _month = new DateFormat.MMMM().format(new DateTime.now());
-  String get month => _month;
+class HomeViewModel with ChangeNotifier {
   var service = locator<Dataquery>();
   Map<String, List<Transaction>> _data = {};
   Map<String, List<Transaction>> get data => _data;
@@ -23,8 +20,8 @@ class HomeViewModel extends ChangeNotifier {
     return spend;
   }
 
-  Future<void> fetchData() async {
-    _data = await service.getData(month: 7, year: 2020);
+  Future<void> fetchData({int month, int year}) async {
+    _data = await service.getData(month: month, year: year);
   }
 
   Future<void> addNewTrans({

@@ -8,7 +8,8 @@ class DatabaseHelper {
   static final _databaseName = "MyDatabase.db";
   static final _databaseVersion = 1;
 
-  static final table = 'my_table';
+  static final table = 'transcation_table';
+  static final table2 = 'category_table';
 
   static final columnId = '_id';
   static final columnName = 'name';
@@ -102,6 +103,20 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.rawQuery(
         'SELECT name, spend, category, day, month, year FROM $table WHERE month == $month AND year == $year ORDER BY month DESC, date DESC, spend DESC');
+  }
+
+  Future<List<Map<dynamic, dynamic>>> queryBaseOnCategory(
+      {int month, int year}) async {
+    Database db = await instance.database;
+    return await db.rawQuery(
+        'SELECT $columnCategory, SUM($columnSpend) as catTotal FROM $table WHERE $columnMonth == $month AND $columnYear == $year GROUP BY $columnCategory ORDER BY SUM($columnSpend) DESC');
+  }
+
+  Future<List<Map<dynamic, dynamic>>> queryTotalonMonth(
+      {int month, int year}) async {
+    Database db = await instance.database;
+    return await db.rawQuery(
+        'SELECT SUM($columnSpend) as sum FROM $table WHERE $columnMonth == $month AND $columnYear == $year');
   }
 
   // We are assuming here that the id column in the map is set. The other

@@ -38,6 +38,18 @@ class Dataquery {
     return mapTranscation;
   }
 
+  Future<List<Map<dynamic, dynamic>>> getSpendCategory(
+      {int month, int year}) async {
+    var data = await dbHelper.queryBaseOnCategory(month: month, year: year);
+    return data;
+  }
+
+  Future<List<Map<dynamic, dynamic>>> getTotalByMonth(
+      {int month, int year}) async {
+    var data = await dbHelper.queryTotalonMonth(month: month, year: year);
+    return data;
+  }
+
   Future<void> insertToDataBase({
     String name,
     String spend,
