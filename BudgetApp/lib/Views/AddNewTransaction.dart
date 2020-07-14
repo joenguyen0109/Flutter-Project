@@ -21,16 +21,18 @@ class CustomDialog extends StatefulWidget {
 
 class _CustomDialogState extends State<CustomDialog> {
   Category selectedUser;
-
+  bool showContent = false;
   TextEditingController nameController = new TextEditingController();
   TextEditingController spendController = new TextEditingController();
   TextEditingController dateController = new TextEditingController();
+  TextEditingController incomeController = new TextEditingController();
 
   bool error = false;
   String errorMessage = "";
 
   Widget dialogContainer(BuildContext context) {
     var model = Provider.of<HomeViewModel>(context);
+
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height / 1.5,
@@ -48,141 +50,180 @@ class _CustomDialogState extends State<CustomDialog> {
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
-          children: <Widget>[
-            Container(
-              // Image
-              height: MediaQuery.of(context).size.height / 3.5,
-              child: Image(
-                image: new AssetImage('asset/image/paying.png'),
-                color: null,
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.center,
-              ),
-            ),
-            Container(
-              // Name
-              width: double.infinity,
-              child: TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.title),
-                  labelText: 'Name',
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: model.income != 0
+            ? Column(
+                mainAxisSize: MainAxisSize.min, // To make the card compact
                 children: <Widget>[
                   Container(
-                    // Amount Money
-                    width: MediaQuery.of(context).size.width / 3.3,
+                    // Image
+                    height: MediaQuery.of(context).size.height / 3.5,
+                    child: Image(
+                      image: new AssetImage('asset/image/paying.png'),
+                      color: null,
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  Container(
+                    // Name
+                    width: double.infinity,
                     child: TextField(
-                      controller: spendController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        ThousandsFormatter(),
-                      ],
+                      controller: nameController,
                       decoration: InputDecoration(
-                        icon: Icon(Icons.attach_money),
-                        labelText: 'Amount',
+                        icon: Icon(Icons.title),
+                        labelText: 'Name',
                       ),
                     ),
                   ),
                   Container(
-                    // Date
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    child: TextField(
-                      controller: dateController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        DateInputFormatter(),
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          // Amount Money
+                          width: MediaQuery.of(context).size.width / 3.3,
+                          child: TextField(
+                            controller: spendController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              ThousandsFormatter(),
+                            ],
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.attach_money),
+                              labelText: 'Amount',
+                            ),
+                          ),
+                        ),
+                        Container(
+                          // Date
+                          width: MediaQuery.of(context).size.width / 2.5,
+                          child: TextField(
+                            controller: dateController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              DateInputFormatter(),
+                            ],
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.date_range),
+                              labelText: 'Date',
+                            ),
+                          ),
+                        ),
                       ],
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.date_range),
-                        labelText: 'Date',
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: DropdownButton<Category>(
+                          hint: Text("Select Category"),
+                          value: selectedUser,
+                          onChanged: (Category value) {
+                            setState(() {
+                              selectedUser = value;
+                            });
+                          },
+                          items: CategoryGetter.users.map((Category user) {
+                            return DropdownMenuItem<Category>(
+                              value: user,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      user.name,
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: FloatingActionButton(
+                          child: Icon(Icons.add),
+                          backgroundColor: Colors.green,
+                          onPressed: () async {
+                            try {
+                              await model.addNewTrans(
+                                name: nameController.text,
+                                spend: spendController.text,
+                                date: dateController.text,
+                                category: selectedUser.name,
+                              );
+                              setState(() {
+                                errorMessage = "";
+                              });
+                            } catch (error) {
+                              if (error.toString() == "Check your input") {
+                                setState(() {
+                                  errorMessage = error.toString();
+                                });
+                              } else {
+                                setState(() {
+                                  errorMessage = "Please choose a Category";
+                                });
+                              }
+                            } finally {
+                              if (errorMessage.isEmpty) {
+                                Navigator.of(context).pop();
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    child: Text(errorMessage),
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: TextField(
+                        controller: incomeController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          ThousandsFormatter(),
+                        ],
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Add your income',
+                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 20),
-                  child: DropdownButton<Category>(
-                    hint: Text("Select Category"),
-                    value: selectedUser,
-                    onChanged: (Category value) {
-                      setState(() {
-                        selectedUser = value;
-                      });
-                    },
-                    items: CategoryGetter.users.map((Category user) {
-                      return DropdownMenuItem<Category>(
-                        value: user,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Text(
-                                user.name,
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: FloatingActionButton(
-                    child: Icon(Icons.add),
-                    backgroundColor: Colors.green,
-                    onPressed: () async {
+                  Text(errorMessage),
+                  GestureDetector(
+                    child: Container(
+                      height: 30,
+                      child: Text('Next'),
+                    ),
+                    onTap: () async {
                       try {
-                        await model.addNewTrans(
-                          name: nameController.text,
-                          spend: spendController.text,
-                          date: dateController.text,
-                          category: selectedUser.name,
-                        );
+                        await model.addNewIncome(income: incomeController.text);
                         setState(() {
-                          errorMessage = "";
+                          errorMessage = '';
                         });
-                      } catch (error) {
-                        if (error.toString() == "Check your input") {
-                          setState(() {
-                            errorMessage = error.toString();
-                          });
-                        } else {
-                          setState(() {
-                            errorMessage = "Please choose a Category";
-                          });
-                        }
-                      } finally {
-                        if (errorMessage.isEmpty) {
-                          Navigator.of(context).pop();
-                        }
+                      } catch (e) {
+                        setState(() {
+                          errorMessage = 'Check your input';
+                        });
                       }
                     },
                   ),
-                ),
-              ],
-            ),
-            Container(
-              child: Text(errorMessage),
-            ),
-          ],
-        ),
+                ],
+              ),
       ),
     );
   }

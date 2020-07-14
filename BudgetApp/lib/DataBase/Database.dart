@@ -9,7 +9,7 @@ class DatabaseHelper {
   static final _databaseVersion = 1;
 
   static final table = 'transcation_table';
-  static final table2 = 'category_table';
+  static final table2 = 'income_table';
 
   static final columnId = '_id';
   static final columnName = 'name';
@@ -19,6 +19,8 @@ class DatabaseHelper {
   static final columnDay = 'day';
   static final columnMonth = 'month';
   static final columnYear = 'year';
+
+  static final columnIncome = 'income';
 
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -55,6 +57,14 @@ class DatabaseHelper {
             $columnYear INTEGER NOT NULL
           )
           ''');
+    await db.execute('''
+          CREATE TABLE $table2 (
+            $columnId INTEGER PRIMARY KEY,
+            $columnIncome INTEGER NOT NULL CHECK ($columnIncome > 0),
+            $columnMonth INTEGER NOT NULL,
+            $columnYear INTEGER NOT NULL
+          )
+          ''');
   }
 
   // Helper methods
@@ -83,11 +93,33 @@ class DatabaseHelper {
     return await db.insert(table, row);
   }
 
+  Future<int> insertIncome({int income, int month, int year}) async {
+    Database db = await instance.database;
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnIncome: income,
+      DatabaseHelper.columnMonth: month,
+      DatabaseHelper.columnYear: year,
+    };
+    return await db.insert(table2, row);
+  }
+
+  Future<List<Map<dynamic, dynamic>>> queryIncome(
+      {int month, int year}) async {
+    Database db = await instance.database;
+    return await db.rawQuery(
+        'SELECT $columnIncome FROM $table2 WHERE $columnMonth == $month AND $columnYear == $year');
+  }
+
+  Future<int> updateIncome({int income, int month,int year}) async{
+    Database db = await instance.database;
+    return await db.rawUpdate('UPDATE $table2 SET $columnIncome = $income WHERE $columnMonth == $month AND $columnYear == $year');
+  }
+
   // All of the rows are returned as a list of maps, where each map is
   // a key-value list of columns.
   Future<List<Map<String, dynamic>>> queryAllRows() async {
     Database db = await instance.database;
-    return await db.query(table);
+    return await db.query(table2);
   }
 
   // All of the methods (insert, query, update, delete) can also be done using

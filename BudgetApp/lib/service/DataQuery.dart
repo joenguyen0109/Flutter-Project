@@ -44,6 +44,22 @@ class Dataquery {
     return data;
   }
 
+  Future<List<Map<dynamic, dynamic>>> getIncome({int month, int year}) async {
+    return await dbHelper.queryIncome(month: month, year: year);
+  }
+
+  Future<int> insertIncome({String income, int month, int year}) async {
+    await dbHelper.insertIncome(
+        income: _validSpend(income), month: month, year: year);
+    return _validSpend(income);
+  }
+
+  Future<int> updateIncome({String income, int month, int year}) async {
+    await dbHelper.updateIncome(
+        income: _validSpend(income), month: month, year: year);
+    return _validSpend(income);
+  }
+
   Future<List<Map<dynamic, dynamic>>> getTotalByMonth(
       {int month, int year}) async {
     var data = await dbHelper.queryTotalonMonth(month: month, year: year);
@@ -53,13 +69,14 @@ class Dataquery {
   Future<void> insertToDataBase({
     String name,
     String spend,
+    int income,
     String date,
     String category,
   }) async {
     try {
       await dbHelper.insertData(
           name: name.isEmpty ? null : name,
-          spend: _validSpend(spend),
+          spend: _validSpend(spend) > income ? null : _validSpend(spend),
           category: category,
           date: _validDate(date));
     } catch (error) {

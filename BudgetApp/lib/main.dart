@@ -96,8 +96,8 @@ class _MainPageState extends State<MainPage> {
           showDialog(
             context: context,
             builder: (BuildContext ctx) => CustomDialog(
-              title: "test",
-              description: "this line of code",
+              title: "Add Transaction",
+              description: "",
               buttonText: "Process",
             ),
           );

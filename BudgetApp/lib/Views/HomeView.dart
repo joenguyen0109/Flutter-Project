@@ -1,6 +1,7 @@
 import 'package:BudgetApp/Model/CategoryModel.dart';
 import 'package:BudgetApp/ViewModels/HomeViewModel.dart';
 import 'package:BudgetApp/ViewModels/TrackTimeViewModel.dart';
+import 'package:BudgetApp/Views/UpdateIncome.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -162,7 +163,12 @@ class _HomeViewState extends State<HomeView> {
                       child: Container(
                         margin: EdgeInsets.only(top: 10),
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext ctx) => UpdateIncome(),
+                            );
+                          },
                           child: ListTile(
                             contentPadding: EdgeInsets.only(left: 10),
                             title: Text(
@@ -179,22 +185,14 @@ class _HomeViewState extends State<HomeView> {
                                 fontSize: 15,
                               ),
                             ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '2%',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.keyboard_arrow_up,
-                                  color: Colors.yellow,
-                                  size: 15,
-                                ),
-                              ],
+                            leading: Container(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Image(
+                                image: new AssetImage('asset/image/income.png'),
+                                color: null,
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.center,
+                              ),
                             ),
                           ),
                         ),
@@ -225,22 +223,14 @@ class _HomeViewState extends State<HomeView> {
                             fontSize: 15,
                           ),
                         ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '-5%',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                              ),
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Colors.greenAccent,
-                              size: 15,
-                            ),
-                          ],
+                        trailing: Container(
+                          padding: EdgeInsets.only(top: 10, right: 10),
+                          child: Image(
+                            image: new AssetImage('asset/image/expense.png'),
+                            color: null,
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.center,
+                          ),
                         ),
                       ),
                     ),
