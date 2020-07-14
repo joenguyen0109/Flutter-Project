@@ -1,17 +1,10 @@
-import 'package:flutter/cupertino.dart';
-
 import '../DataBase/Database.dart';
 import '../Model/TranscationModel.dart';
 
-class Dataquery with ChangeNotifier {
+class Dataquery {
   final dbHelper = DatabaseHelper.instance;
 
-  Map<String, List<Transaction>> _list = {};
-  Map<String, List<Transaction>> get list => _list;
-
-
-
-  Future<void> getData({int month, int year}) async {
+  Future<Map<String, List<Transaction>>> getData({int month, int year}) async {
     Map<String, List<Transaction>> mapTranscation = {};
     List<Transaction> listTransaction = new List();
     final data = await dbHelper.queryDataByMonth(month: month, year: year);
@@ -35,17 +28,29 @@ class Dataquery with ChangeNotifier {
         mapTranscation[element.day.toString()].add(element);
       }
     });
-    print("output: ");
-    mapTranscation.forEach((key, value) {
-      print(key);
-      value.forEach((element) {
-        print(element.name + " " + element.day.toString());
-      });
-    });
-    _list =  mapTranscation;
+    // print("output: ");
+    // mapTranscation.forEach((key, value) {
+    //   print("Day: "+key);
+    //   value.forEach((element) {
+    //     print(element.name + " " + element.spend.toString());
+    //   });
+    // });
+    return mapTranscation;
   }
 
-  Future<void> setValue({
+  Future<List<Map<dynamic, dynamic>>> getSpendCategory(
+      {int month, int year}) async {
+    var data = await dbHelper.queryBaseOnCategory(month: month, year: year);
+    return data;
+  }
+
+  Future<List<Map<dynamic, dynamic>>> getTotalByMonth(
+      {int month, int year}) async {
+    var data = await dbHelper.queryTotalonMonth(month: month, year: year);
+    return data;
+  }
+
+  Future<void> insertToDataBase({
     String name,
     String spend,
     String date,
@@ -77,18 +82,18 @@ class Dataquery with ChangeNotifier {
 
   String _validDate(String date) {
     var listDigits = date.split('/');
-    var Date = "";
+    var d = "";
     for (var i = 2; i > -1; i--) {
       if (i == 2 && int.parse(listDigits[i]) < 2020) {
         return null;
       }
       if (i != 0) {
-        Date += listDigits[i] + '-';
+        d += listDigits[i] + '-';
       } else {
-        Date += listDigits[i];
+        d += listDigits[i];
       }
     }
-    return Date;
+    return d;
   }
 
   void prints() async {

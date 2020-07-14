@@ -1,8 +1,9 @@
+import 'package:BudgetApp/ViewModels/HomeViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 import '../Model/CategoryModel.dart';
-import '../ViewModels/AddNewTransVM.dart';
-import 'package:stacked/stacked.dart';
+import 'package:provider/provider.dart';
+
 class CustomDialog extends StatefulWidget {
   final String title, description, buttonText;
   final Image image;
@@ -29,6 +30,7 @@ class _CustomDialogState extends State<CustomDialog> {
   String errorMessage = "";
 
   Widget dialogContainer(BuildContext context) {
+    var model = Provider.of<HomeViewModel>(context);
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height / 1.5,
@@ -147,12 +149,12 @@ class _CustomDialogState extends State<CustomDialog> {
                     backgroundColor: Colors.green,
                     onPressed: () async {
                       try {
-                        // await addNewTrans.setValue(
-                        //   name: nameController.text,
-                        //   spend: spendController.text,
-                        //   date: dateController.text,
-                        //   category: selectedUser.name,
-                        // );
+                        await model.addNewTrans(
+                          name: nameController.text,
+                          spend: spendController.text,
+                          date: dateController.text,
+                          category: selectedUser.name,
+                        );
                         setState(() {
                           errorMessage = "";
                         });
@@ -187,16 +189,13 @@ class _CustomDialogState extends State<CustomDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AddNewTransVM>.reactive(
-      builder: (context, model, child) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        child: dialogContainer(context),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
-      viewModelBuilder: () => AddNewTransVM(),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContainer(context),
     );
   }
 }
