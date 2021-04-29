@@ -1,0 +1,64 @@
+{
+    "Bill": [
+        "icon/Bill/bill.png",
+        "icon/Bill/Electricity_Bill.png",
+        "icon/Bill/Gas_Bill.png",
+        "icon/Bill/payment.png",
+        "icon/Bill/receipt.png",
+        "icon/Bill/telephone.png",
+        "icon/Bill/Water_Bill.png",
+        "icon/Bill/Wifi_Bill.png"
+    ],
+    "Drink": [
+        "icon/Drink/beer.png",
+        "icon/Drink/bubble_tea.png",
+        "icon/Drink/coffee_cup.png",
+        "icon/Drink/latte.png",
+        "icon/Drink/Whine.png"
+    ],
+    "Education": [
+        "icon/Education/book.png",
+        "icon/Education/school.png"
+    ],
+    "Entertainment": [
+        "icon/Entertainment/casino_chips.png",
+        "icon/Entertainment/Gaming.png",
+        "icon/Entertainment/Party.png",
+        "icon/Entertainment/popcorn.png"
+    ],
+    "Food": [
+        "icon/Food/cake.png",
+        "icon/Food/diet.png",
+        "icon/Food/fast_food.png",
+        "icon/Food/french_fries.png",
+        "icon/Food/hamburger.png",
+        "icon/Food/healthy_eating.png",
+        "icon/Food/pizza.png"
+    ],
+    "Heath": [
+        "icon/Heath/Beauty.png",
+        "icon/Heath/Heath.png"
+    ],
+    "Other": [
+        "icon/Other/baby.png",
+        "icon/Other/electronic.png",
+        "icon/Other/furniture.png",
+        "icon/Other/insurance.png",
+        "icon/Other/others.png",
+        "icon/Other/Pet.png",
+        "icon/Other/Sport.png",
+        "icon/Other/tax.png"
+    ],
+    "Shopping": [
+        "icon/Shopping/dress.png",
+        "icon/Shopping/shirt.png",
+        "icon/Shopping/Shopping.png",
+        "icon/Shopping/wardrobe.png"
+    ],
+    "Transportation": [
+        "icon/Transportation/airplane.png",
+        "icon/Transportation/bus.png",
+        "icon/Transportation/car.png",
+        "icon/Transportation/tram.png"
+    ]
+}
