@@ -22,7 +22,10 @@ class IconPageEvent extends MainEvent {
   });
 }
 
-class AddTransactionToDataBaseEvent extends MainEvent {}
+class AddTransactionToDataBaseEvent extends MainEvent {
+  final icon;
+  AddTransactionToDataBaseEvent({@required this.icon});
+}
 
 class CategoryPageEvent extends MainEvent {}
 

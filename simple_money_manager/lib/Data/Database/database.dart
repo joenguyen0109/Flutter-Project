@@ -24,6 +24,7 @@ class DataBaseClass {
   static final columnYear = 'year';
   static final columnIncome = 'income';
   static final columnPath = 'path';
+  static final columnIconPath = 'iconPath';
 
   // Create a singleton
   DataBaseClass._();
@@ -57,6 +58,7 @@ class DataBaseClass {
             $columnName TEXT NOT NULL,
             $columnSpend REAL NOT NULL,
             $columnCategory TEXT NOT NULL,
+            $columnIconPath TEXT NOT NULL,
             $columnDay INTEGER NOT NULL,
             $columnMonth INTEGER NOT NULL,
             $columnYear INTEGER NOT NULL

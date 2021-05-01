@@ -109,6 +109,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           newtransaction['amount'],
           newtransaction['category'],
           newtransaction['date'],
+          event.icon,
         );
         Get.offAll(() => MainWidget());
         this.add(TransactionPageEvent());

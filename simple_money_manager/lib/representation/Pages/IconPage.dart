@@ -1,4 +1,3 @@
-import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_money_manager/Business_logic/bloc/MainBloc/main_bloc.dart';
@@ -31,7 +30,7 @@ class IconPage extends StatelessWidget {
                 // highlightColor: null,
                 onTap: () {
                   context.read<MainBloc>().add(
-                        AddTransactionToDataBaseEvent(),
+                        AddTransactionToDataBaseEvent(icon: value),
                       );
                   context.read<DropdownCubit>().onChanged(null);
                 },

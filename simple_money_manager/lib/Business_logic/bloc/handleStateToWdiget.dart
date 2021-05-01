@@ -26,22 +26,25 @@ dataToColumnWidget(var data) {
         for (var transaction in v)
           {
             listWidget.add(
-              ListTile(
-                onLongPress: () {
-                  print(transaction.id);
-                },
-                onTap: () => print(transaction.id),
-                // leading: Image(
-                //   image: AssetImage(CategoryGetter.getImage(item.category)),
-                //   height: MediaQuery.of(context).size.height / 23,
-                // ),
-                title: Text(
-                  transaction.name,
-                  style: TextStyle(fontSize: 15),
-                ),
-                trailing: Text(
-                  "-${formatCurrency.format(transaction.spend)}",
-                  style: TextStyle(fontSize: 15),
+              Container(
+                padding: EdgeInsets.all(3),
+                child: ListTile(
+                  onLongPress: () {
+                    print(transaction.id);
+                  },
+                  onTap: () => print(transaction.id),
+                  leading: Image(
+                    image: AssetImage(transaction.iconPath),
+                    // height: MediaQuery.of(context).size.height / 23,
+                  ),
+                  title: Text(
+                    transaction.name,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  trailing: Text(
+                    "-${formatCurrency.format(transaction.spend)}",
+                    style: TextStyle(fontSize: 15),
+                  ),
                 ),
               ),
             )

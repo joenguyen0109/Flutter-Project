@@ -9,6 +9,7 @@ class DataAPI {
     double spend,
     String category,
     DateTime time,
+    String iconPath,
   ) async {
     final dataProvider = new DataBaseQueryProvider(DataBaseClass.instance);
     await dataProvider.insertNewTransaction(
@@ -17,6 +18,7 @@ class DataAPI {
         spend: spend,
         category: category,
         time: time,
+        iconPath: iconPath,
       ),
     );
   }

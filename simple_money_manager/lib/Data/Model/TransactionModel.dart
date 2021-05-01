@@ -1,4 +1,4 @@
-import 'package:simple_money_manager/data/Database/database.dart';
+import 'package:simple_money_manager/Data/Database/database.dart';
 
 class Transaction {
   int id;
@@ -6,13 +6,14 @@ class Transaction {
   double spend;
   String category;
   DateTime time;
-  Transaction({
-    this.id,
-    this.name,
-    this.spend,
-    this.category,
-    this.time,
-  });
+  String iconPath;
+  Transaction(
+      {this.id,
+      this.name,
+      this.spend,
+      this.category,
+      this.time,
+      this.iconPath});
 
   factory Transaction.fromJson(Map<String, dynamic> json) => new Transaction(
         id: json["id"],
@@ -24,6 +25,7 @@ class Transaction {
           json["month"],
           json["day"],
         ),
+        iconPath: json["iconPath"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,5 +36,6 @@ class Transaction {
         DataBaseClass.columnDay: time.day,
         DataBaseClass.columnMonth: time.month,
         DataBaseClass.columnYear: time.year,
+        DataBaseClass.columnIconPath: iconPath,
       };
 }
