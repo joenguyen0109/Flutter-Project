@@ -1,6 +1,6 @@
 import os
 import json
-path = CURR_DIR = os.path.dirname(os.path.realpath(__file__)) + '\icon'
+path =  os.path.dirname(os.path.realpath(__file__)) + '/icon'
 print(os.listdir(path))
 
 data = {}

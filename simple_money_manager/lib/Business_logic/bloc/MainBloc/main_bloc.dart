@@ -65,7 +65,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       if (event is TransactionPageEvent) {
         yield LoadingState();
         //var data = await DataAPI.getAllTransactions();
-        print('TransactionPage build');
 
         var data = await dataRepository.getTrasactionsByTime(
             appbarCubit.time.month, appbarCubit.time.year);
@@ -103,6 +102,14 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         final listPath =
             await dataRepository.getIcon(event.category.toString());
         Get.to(() => IconPage(path: listPath));
+      } else if (event is UpdateIncomeToDataBase) {
+        await dataRepository.insertIncome(
+          handleForm(event.income),
+          appbarCubit.time.month,
+          appbarCubit.time.year,
+        );
+        Get.back();
+        this.add(TransactionPageEvent());
       } else if (event is AddTransactionToDataBaseEvent) {
         await dataRepository.insertData(
           newtransaction['title'],
@@ -121,6 +128,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } on Failure catch (error) {
       Get.snackbar('Error', error.message);
     } catch (e) {
+      print(e);
       yield ErrorState(message: 'Something goes wrong');
     }
   }
@@ -145,6 +153,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       'date': DateTime.parse(date),
       'category': category,
     };
+  }
+
+  int handleForm(String data) {
+    int datareturn = 0;
+    if (data.isEmpty) {
+      throw Failure(message: 'Field can not be empty');
+    }
+    try {
+      datareturn = int.parse(data);
+    } catch (e) {
+      throw Failure(message: 'Field only takes number');
+    }
+    return datareturn;
   }
 
   @override

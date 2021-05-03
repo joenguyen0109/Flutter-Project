@@ -27,35 +27,6 @@ class DisplayIncomeExpenseBoxWidget extends StatelessWidget {
                 margin: EdgeInsets.only(top: 10),
                 child: ListTile(
                   onTap: () => Get.dialog(UpdateIncomeWidget()),
-                  // context.read<UpdateincomeBloc>.add(ShowDialogEvent)
-                  // if (state is ShowDialogState) {
-                  //   SchedulerBinding.instance.addPostFrameCallback((_) {
-                  //     showDialog(
-                  //       context: context,
-                  //       barrierDismissible: false,
-                  //       builder: (_) {
-                  //         return Scaffold(
-                  //           body: Center(
-                  //             child: RaisedButton(
-                  //               child: Text('dismiss'),
-                  //               onPressed: () {
-                  //                 context
-                  //                     .read<UpdateincomeBloc>()
-                  //                     .add(HideDialogEvent());
-                  //               },
-                  //             ),
-                  //           ),
-                  //         );
-                  //       },
-                  //     );
-                  //   });
-                  // }
-                  // if (state is HideDialogState) {
-                  //   SchedulerBinding.instance.addPostFrameCallback((_) {
-                  //     Navigator.pop(context);
-                  //   });
-                  // }
-
                   contentPadding: EdgeInsets.only(left: 10),
                   title: Text(
                     '$income',

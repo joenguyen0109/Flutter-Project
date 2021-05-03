@@ -31,4 +31,9 @@ class CategoryPageEvent extends MainEvent {}
 
 class AddTransactionPageEvent extends MainEvent {}
 
+class UpdateIncomeToDataBase extends MainEvent {
+  final income;
+  UpdateIncomeToDataBase({@required this.income});
+}
+
 class DeleteTransactionEvent extends MainEvent {}

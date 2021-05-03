@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:simple_money_manager/Business_logic/bloc/UpdateIncomeBloc/UpdateIncomeBloc.dart';
-import 'package:simple_money_manager/Business_logic/cubit/AppBar/appbar_cubit.dart';
+import 'package:simple_money_manager/Business_logic/bloc/MainBloc/main_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
@@ -58,13 +57,11 @@ class UpdateIncomeWidget extends StatelessWidget {
                     child: Text('Back'),
                   ),
                   TextButton(
-                    onPressed: () {
-                      context.read<UpdateIncomeBloc>().add(UpdateIncomeEvent(
-                            data: incomeController.text,
-                            month: context.read<AppbarCubit>().time.month,
-                            year: context.read<AppbarCubit>().time.year,
-                          ));
-                    },
+                    onPressed: () => context.read<MainBloc>().add(
+                          UpdateIncomeToDataBase(
+                            income: incomeController.text,
+                          ),
+                        ),
                     child: Text('Next'),
                   ),
                 ],
