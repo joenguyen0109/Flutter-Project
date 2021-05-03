@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:simple_money_manager/Business_logic/bloc/UpdateIncomeBloc/UpdateIncomeBloc.dart';
 import 'package:simple_money_manager/Business_logic/cubit/AppBar/appbar_cubit.dart';
 import 'package:simple_money_manager/Business_logic/cubit/BottomNavigationCubit/BottomNavigationCubit.dart';
 import 'package:simple_money_manager/Data/Model/Failure.dart';
@@ -21,14 +20,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final DataAPI dataRepository;
   final BottomnavigationCubit bottomnavigationCubit;
   final AppbarCubit appbarCubit;
-  final UpdateIncomeBloc formControl;
   StreamSubscription appbarCubitSubscription;
   StreamSubscription bottomnavigationbarSubscription;
   StreamSubscription formControlSubscription;
   MainBloc({
     @required this.bottomnavigationCubit,
     @required this.appbarCubit,
-    @required this.formControl,
     @required this.dataRepository,
   }) : super(LoadingState()) {
     bottomnavigationbarSubscription =
@@ -47,14 +44,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         this.add(CategoryPageEvent());
       }
     });
-
-    formControlSubscription = formControl.stream.listen(
-      (state) {
-        if (state is SuccessfullState) {
-          this.add(TransactionPageEvent());
-        }
-      },
-    );
   }
   var newtransaction = {};
   @override

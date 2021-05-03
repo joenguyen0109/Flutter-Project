@@ -37,7 +37,7 @@ class DailyTransaction extends StatelessWidget {
               ),
             ],
           ),
-          dataToColumnWidget(data),
+          dataToColumnWidget(data, context),
         ],
       ),
     );

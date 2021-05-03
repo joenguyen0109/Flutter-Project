@@ -19,7 +19,7 @@ mainBlocStateToWidget(MainState state) {
   }
 }
 
-dataToColumnWidget(var data) {
+dataToColumnWidget(var data, BuildContext context) {
   final formatCurrency = new NumberFormat("#,##0", "en_US");
   List<Widget> listWidget = [];
   data.forEach((k, v) => {
@@ -35,7 +35,7 @@ dataToColumnWidget(var data) {
                   onTap: () => print(transaction.id),
                   leading: Image(
                     image: AssetImage(transaction.iconPath),
-                    // height: MediaQuery.of(context).size.height / 23,
+                    height: MediaQuery.of(context).size.height / 23,
                   ),
                   title: Text(
                     transaction.name,
