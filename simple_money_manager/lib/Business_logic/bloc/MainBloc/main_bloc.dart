@@ -20,9 +20,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final DataAPI dataRepository;
   final BottomnavigationCubit bottomnavigationCubit;
   final AppbarCubit appbarCubit;
+
+  var _newtransaction = {};
+
   StreamSubscription appbarCubitSubscription;
   StreamSubscription bottomnavigationbarSubscription;
-  StreamSubscription formControlSubscription;
+
   MainBloc({
     @required this.bottomnavigationCubit,
     @required this.appbarCubit,
@@ -45,7 +48,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       }
     });
   }
-  var newtransaction = {};
+
   @override
   Stream<MainState> mapEventToState(
     MainEvent event,
@@ -53,7 +56,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     try {
       if (event is TransactionPageEvent) {
         yield LoadingState();
-        //var data = await DataAPI.getAllTransactions();
 
         var data = await dataRepository.getTrasactionsByTime(
             appbarCubit.time.month, appbarCubit.time.year);
@@ -82,7 +84,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         var category = await dataRepository.getListCategory();
         Get.to(() => AddTransactionPage(category: category));
       } else if (event is IconPageEvent) {
-        newtransaction = formatValidate(
+        _newtransaction = formatValidate(
             title: event.name,
             amount: event.spend,
             date: event.time,
@@ -100,14 +102,18 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         Get.back();
         this.add(TransactionPageEvent());
       } else if (event is AddTransactionToDataBaseEvent) {
-        await dataRepository.insertData(
-          newtransaction['title'],
-          newtransaction['amount'],
-          newtransaction['category'],
-          newtransaction['date'],
+        await dataRepository.insertNewTransaction(
+          _newtransaction['title'],
+          _newtransaction['amount'],
+          _newtransaction['category'],
+          _newtransaction['date'],
           event.icon,
         );
         Get.offAll(() => MainWidget());
+        this.add(TransactionPageEvent());
+      } else if (event is DeleteTransaction) {
+        await dataRepository.deleteTransaction(event.id);
+        Get.back();
         this.add(TransactionPageEvent());
       }
     } on DatabaseException {
@@ -117,7 +123,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     } on Failure catch (error) {
       Get.snackbar('Error', error.message);
     } catch (e) {
-      print(e);
       yield ErrorState(message: 'Something goes wrong');
     }
   }
@@ -161,7 +166,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   Future<void> close() {
     bottomnavigationbarSubscription.cancel();
     appbarCubitSubscription.cancel();
-    formControlSubscription.cancel();
     return super.close();
   }
 }

@@ -36,4 +36,9 @@ class UpdateIncomeToDataBase extends MainEvent {
   UpdateIncomeToDataBase({@required this.income});
 }
 
+class DeleteTransaction extends MainEvent {
+  final id;
+  DeleteTransaction({@required this.id});
+}
+
 class DeleteTransactionEvent extends MainEvent {}

@@ -10,7 +10,6 @@ import 'BottomNavigationBarWidget.dart';
 class MainWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('Main widget get rebuild');
     return Scaffold(
       // Bar on top to select mont
       appBar: AppBarWidget(),

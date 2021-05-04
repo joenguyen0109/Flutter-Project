@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_money_manager/Business_logic/bloc/MainBloc/main_bloc.dart';
 import 'package:simple_money_manager/representation/Pages/CategoryPage.dart';
 import 'package:simple_money_manager/representation/Pages/HomePage.dart';
+import 'package:simple_money_manager/representation/Pages/InfoDialog.dart';
 
 mainBlocStateToWidget(MainState state) {
   if (state is LoadingState) {
@@ -29,10 +31,9 @@ dataToColumnWidget(var data, BuildContext context) {
               Container(
                 padding: EdgeInsets.all(3),
                 child: ListTile(
-                  onLongPress: () {
-                    print(transaction.id);
-                  },
-                  onTap: () => print(transaction.id),
+                  onTap: () => Get.dialog(InforDialog(
+                    transaction: transaction,
+                  )),
                   leading: Image(
                     image: AssetImage(transaction.iconPath),
                     height: MediaQuery.of(context).size.height / 23,

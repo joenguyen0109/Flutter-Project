@@ -5,7 +5,7 @@ import 'package:simple_money_manager/Data/Model/IncomeModel.dart';
 import 'package:simple_money_manager/Data/Model/TransactionModel.dart';
 
 class DataAPI {
-  insertData(
+  insertNewTransaction(
     String name,
     double spend,
     String category,
@@ -22,6 +22,11 @@ class DataAPI {
         iconPath: iconPath,
       ),
     );
+  }
+
+  deleteTransaction(int id) async {
+    final dataProvider = new DataBaseQueryProvider(DataBaseClass.instance);
+    await dataProvider.deleteTransaction(id);
   }
 
   insertIncome(int newIncome, int month, int year) async {
@@ -109,7 +114,6 @@ class DataAPI {
         [key, spend]: value
       });
     }
-    print(data);
 
     return data;
   }
@@ -119,19 +123,9 @@ class DataAPI {
     return await dataProvider.getIncomeByMonth(month, year);
   }
 
-  deleteAllData() async {
-    final dataProvider = new DataBaseQueryProvider(DataBaseClass.instance);
-    await dataProvider.deleteAllTransactions();
-  }
-
   getSuggestions(String pattern) async {
     final dataProvider = new DataBaseQueryProvider(DataBaseClass.instance);
     var data = await dataProvider.getPatternCategory(pattern);
     return data;
   }
-
-  // static deleteData() async {
-  //   final dataProvider = new DataBaseQueryProvider(DataBaseClass.instance);
-  //   await dataProvider.deleteTransaction(id)
-  // }
 }

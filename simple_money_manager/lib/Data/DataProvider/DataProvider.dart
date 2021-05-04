@@ -162,7 +162,7 @@ class DataBaseQueryProvider {
   getCategory() async {
     final db = await _databaseclass.database;
     var result = await db.rawQuery(
-      'SELECT DISTINCT ${DataBaseClass.columnCategory} FROM  ${DataBaseClass.iconTable}',
+      'SELECT DISTINCT ${DataBaseClass.columnCategory} FROM  ${DataBaseClass.iconTable} ORDER BY category',
     );
     return result.map((item) => item['category']).toList();
   }
