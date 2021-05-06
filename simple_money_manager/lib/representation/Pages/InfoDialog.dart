@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_money_manager/Business_logic/bloc/MainBloc/main_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simple_money_manager/representation/Widget/ConfirmDeleteWidget.dart';
 
 class InforDialog extends StatelessWidget {
   final transaction;
@@ -70,9 +71,8 @@ class InforDialog extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: FloatingActionButton(
                   backgroundColor: Colors.red,
-                  onPressed: () => context
-                      .read<MainBloc>()
-                      .add(DeleteTransaction(id: transaction.id)),
+                  onPressed: () =>
+                      Get.dialog(ConfirmDeleteWidget(id: transaction.id)),
                   elevation: 5.0,
                   child: Icon(
                     Icons.delete,

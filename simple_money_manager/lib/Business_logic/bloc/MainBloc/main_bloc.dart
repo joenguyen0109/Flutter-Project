@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_money_manager/Business_logic/cubit/AppBar/appbar_cubit.dart';
 import 'package:simple_money_manager/Business_logic/cubit/BottomNavigationCubit/BottomNavigationCubit.dart';
@@ -12,6 +13,8 @@ import 'package:simple_money_manager/representation/Pages/AddTransactionPage.dar
 import 'package:simple_money_manager/representation/Pages/IconPage.dart';
 import 'package:simple_money_manager/representation/Widget/MainWidget.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../handleStateToWdiget.dart';
 
 part 'main_event.dart';
 part 'main_state.dart';
@@ -54,6 +57,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     MainEvent event,
   ) async* {
     try {
+// TransactionPageEvent
       if (event is TransactionPageEvent) {
         yield LoadingState();
 
@@ -73,6 +77,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           expense: expense,
           balance: income - expense,
         );
+// TransactionPageEvent
+
+// CategoryPageEvent
       } else if (event is CategoryPageEvent) {
         yield LoadingState();
         var data = await dataRepository.getExpenseByCategory(
@@ -80,9 +87,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           appbarCubit.time.year,
         );
         yield CategoryPageState(data: data);
+// CategoryPageEvent
+
+//AddTransactionPageEvent
       } else if (event is AddTransactionPageEvent) {
         var category = await dataRepository.getListCategory();
         Get.to(() => AddTransactionPage(category: category));
+//AddTransactionPageEvent
+
+//InconPageEvent
       } else if (event is IconPageEvent) {
         _newtransaction = formatValidate(
             title: event.name,
@@ -93,6 +106,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         final listPath =
             await dataRepository.getIcon(event.category.toString());
         Get.to(() => IconPage(path: listPath));
+//InconPageEvent
+
+//UpdateIncomeToDataBase
       } else if (event is UpdateIncomeToDataBase) {
         await dataRepository.insertIncome(
           handleForm(event.income),
@@ -101,6 +117,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         );
         Get.back();
         this.add(TransactionPageEvent());
+//UpdateIncomeToDataBase
+
+//AddTransactionToDataBaseEvent
       } else if (event is AddTransactionToDataBaseEvent) {
         await dataRepository.insertNewTransaction(
           _newtransaction['title'],
@@ -111,19 +130,24 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         );
         Get.offAll(() => MainWidget());
         this.add(TransactionPageEvent());
+//AddTransactionToDataBaseEvent
+
+//DeleteTransaction
       } else if (event is DeleteTransaction) {
         await dataRepository.deleteTransaction(event.id);
         Get.back();
         this.add(TransactionPageEvent());
       }
+//DeleteTransaction
+
+// Hanlde error
     } on DatabaseException {
-      Get.snackbar('Error', 'Error in database');
-      Get.offAll(() => MainWidget());
-      yield ErrorState(message: 'There are errors with the database');
+      // Get.offAll(() => MainWidget());
+      showToastMessage('something wrong with database');
     } on Failure catch (error) {
-      Get.snackbar('Error', error.message);
+      showToastMessage(error.message);
     } catch (e) {
-      yield ErrorState(message: 'Something goes wrong');
+      showToastMessage(e.toString());
     }
   }
 
